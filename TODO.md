@@ -1,7 +1,9 @@
 # TODO:
 
 - fixedWidth/Height does not work
-- Margin
+- render image/sprite as background
+
+- [x] Margin
 
 # WILL NOT FIX:
 

@@ -22,8 +22,8 @@ class Element {
     int maxWidth = INT_MAX;
 
     Color bgColor = BLACK;
-    Color onHoverBgColor;
-    bool isOnHoverBgColorSet = false;
+    Color onHoverBgColor = {0, 0, 0, 0};
+    // bool isOnHoverBgColorSet = false;
     Color fgColor = RAYWHITE;
 
     int fontSize = 20;
@@ -64,11 +64,23 @@ class Element {
 
       handleInput();
 
-      if (isHover && isOnHoverBgColorSet) {
-        DrawRectangle(x, y, width, height, onHoverBgColor);
+      if (isHover && onHoverBgColor.a != 0) {
+        DrawRectangle(x + margin[3], y + margin[0], width - margin[1] - margin[3], height - margin[0] - margin[2], onHoverBgColor);
+        // DrawRectangleRounded(
+        //     { static_cast<float>(x + margin[3]), static_cast<float>(y + margin[0]), static_cast<float>(width - margin[1] - margin[3]), static_cast<float>(height - margin[0] - margin[2]) },
+        //     0.25f,   // Radius, adjust as needed
+        //     0,       // Segments, adjust as needed
+        //     onHoverBgColor
+        //     );
       }
       else {
-        DrawRectangle(x, y, width, height, bgColor);
+        DrawRectangle(x + margin[3], y + margin[0], width - margin[1] - margin[3], height - margin[0] - margin[2], bgColor);
+        // DrawRectangleRounded(
+        //     { static_cast<float>(x + margin[3]), static_cast<float>(y + margin[0]), static_cast<float>(width - margin[1] - margin[3]), static_cast<float>(height - margin[0] - margin[2]) },
+        //     0.25f,   // Radius, adjust as needed
+        //     0,       // Segments, adjust as needed
+        //     bgColor
+        //     );
       }
 
       int textX = x + padding[3] + (width - padding[1] - padding[3] - MeasureText(text.c_str(), fontSize)) / 2;
@@ -104,7 +116,6 @@ class Element {
       fgColor = color;
     }
     void setOnHoverBgColor(Color color) {
-      isOnHoverBgColorSet = true;
       onHoverBgColor = color;
     }
 
@@ -131,8 +142,10 @@ class Element {
     }
 
     void calculateSize() {
-      int totalWidth = padding[1] + padding[3];
-      int totalHeight = padding[0] + padding[2];
+      int totalWidth = padding[1] + padding[3] + margin[1] + margin[3];
+      int totalHeight = padding[0] + padding[2] + margin[0] + margin[2];
+      // x = margin[3];
+      // y = margin[0];
 
       if (text != "") {
         int textWidth = MeasureText(text.c_str(), fontSize);
@@ -143,8 +156,8 @@ class Element {
 
       int maxChildWidth = 0;
       int maxChildHeight = 0;
-      int currentX = padding[3];
-      int currentY = padding[0];
+      int currentX = padding[3] + margin[3];
+      int currentY = padding[0] + margin[0];
       for (Element* child : children) {
         child->calculateSize();
 
@@ -154,22 +167,24 @@ class Element {
         if (flexDirection == "row") {
           currentX += child->width + gap;
           maxChildWidth = std::max(maxChildWidth, child->width);
-          totalHeight = std::max(totalHeight, currentY + child->height + padding[2]);
+          totalHeight = std::max(totalHeight, currentY + child->height + padding[2] + margin[2]);
         }
         else if (flexDirection == "column") {
           currentY += child->height + gap;
           maxChildHeight = std::max(maxChildHeight, child->height);
-          totalWidth = std::max(totalWidth, currentX + child->width + padding[3]);
+          totalWidth = std::max(totalWidth, currentX + child->width + padding[3] + margin[3]);
         }
       }
 
       if (flexDirection == "row") {
-        totalWidth = std::max(totalWidth, currentX - gap + padding[3]);
+        totalWidth = std::max(totalWidth, currentX - gap + padding[3] + margin[3]);
       }
       else if (flexDirection == "column") {
-        totalHeight = std::max(totalHeight, currentY - gap + padding[2]);
+        totalHeight = std::max(totalHeight, currentY - gap + padding[2] + margin[2]);
       }
 
+      // x = margin[1] + margin[3];
+      // y = margin[0] + margin[2];
 
       if (!fixedWidth) {
         width = totalWidth;

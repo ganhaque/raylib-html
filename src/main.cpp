@@ -19,6 +19,7 @@ int main() {
   // rootElement.fixedHeight = screenHeight;
   rootElement.setBackgroundColor(BLACK);
   rootElement.setPadding(10, 10, 10, 10);
+  rootElement.setMargin(10, 10, 10, 10);
   rootElement.flexDirection = "column";
 
   // Create child elements
@@ -31,6 +32,7 @@ int main() {
   Element headerChild("Header child");
   headerChild.setBackgroundColor(RED);
   headerChild.setPadding(10, 10, 10, 10);
+  headerChild.setMargin(10, 10, 10, 10);
   header.addChild(&headerChild);
   Element headerChild2("Header child 2, which have smaller text size");
   headerChild2.fontSize = 10;
@@ -43,6 +45,7 @@ int main() {
   Element paragraph("This is a paragraph.");
   paragraph.setBackgroundColor(LIGHTGRAY);
   paragraph.setPadding(10, 10, 10, 10);
+  paragraph.fgColor = BLACK;
   rootElement.addChild(&paragraph);
   //
   Element button("Click me!");
