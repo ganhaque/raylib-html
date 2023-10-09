@@ -141,6 +141,27 @@ class Element {
       alignItemsCenter();
     }
 
+    void alignItemsCenter() {
+      if (flexDirection == "row") {
+        int parentCenterY = y + height / 2;
+
+        for (Element* child : children) {
+          int childCenterY = child->y + child->height / 2;
+          int yOffset = parentCenterY - childCenterY;
+          child->y += yOffset;
+        }
+      }
+      else if (flexDirection == "column") {
+        int parentCenterX = x + width / 2;
+
+        for (Element* child : children) {
+          int childCenterX = child->x + child->width / 2;
+          int xOffset = parentCenterX - childCenterX;
+          child->x += xOffset;
+        }
+      }
+    }
+
     void calculateSize() {
       int totalWidth = padding[1] + padding[3] + margin[1] + margin[3];
       int totalHeight = padding[0] + padding[2] + margin[0] + margin[2];
@@ -183,35 +204,18 @@ class Element {
         totalHeight = std::max(totalHeight, currentY - gap + padding[2] + margin[2]);
       }
 
-      // x = margin[1] + margin[3];
-      // y = margin[0] + margin[2];
-
       if (!fixedWidth) {
         width = totalWidth;
+      }
+      else {
+        width = fixedWidth;
       }
       if (!fixedHeight) {
         height = totalHeight;
       }
-    }
-
-    void alignItemsCenter() {
-      if (flexDirection == "row") {
-        int parentCenterY = y + height / 2;
-
-        for (Element* child : children) {
-          int childCenterY = child->y + child->height / 2;
-          int yOffset = parentCenterY - childCenterY;
-          child->y += yOffset;
-        }
-      }
-      else if (flexDirection == "column") {
-        int parentCenterX = x + width / 2;
-
-        for (Element* child : children) {
-          int childCenterX = child->x + child->width / 2;
-          int xOffset = parentCenterX - childCenterX;
-          child->x += xOffset;
-        }
+      else {
+        height = fixedHeight;
       }
     }
+
 };
